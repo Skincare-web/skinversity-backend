@@ -2,11 +2,13 @@ package com.skinversity.backend.Services;
 
 import com.skinversity.backend.Enumerators.Roles;
 import com.skinversity.backend.Exceptions.UserAlreadyExists;
+import com.skinversity.backend.Exceptions.UserNotFoundException;
 import com.skinversity.backend.Models.Users;
 import com.skinversity.backend.Repositories.UserRepository;
 import com.skinversity.backend.Requests.EmailRequest;
 import com.skinversity.backend.Requests.LoginRequest;
 import com.skinversity.backend.Requests.RegistrationRequest;
+import com.skinversity.backend.Requests.ResetPassword;
 import com.skinversity.backend.ServiceInterfaces.UserServiceInterface;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -95,8 +97,18 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public void resetPassword(String password) {
-
+    public void resetPassword(ResetPassword resetPassword) {
+        Optional<Users> user = userRepository.findByEmail(resetPassword.getEmail());
+        if (user.isPresent()) {
+            if(user.get().getPassword().equals(passwordEncoder.encode(resetPassword.getOldPassword()))) {
+                user.get().setPassword(passwordEncoder.encode(resetPassword.getNewPassword()));
+                userRepository.save(user.get());
+            }else{
+                throw new BadCredentialsException("Invalid password");
+            }
+        }else{
+            throw new UserNotFoundException("User not found");
+        }
     }
 
     private String jwtAccessToken(String email, Roles role) {
