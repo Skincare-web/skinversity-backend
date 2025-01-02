@@ -6,8 +6,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -15,20 +18,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Service
 public class JWTService {
-    @Value("${JWT_SECRET}")
-    private final String secretKey;
+    @Value("${jwt.secret}")
+    private String secretKey;
 
-    private Long accessTokenExpirationTime;
-//    private final ControllerEndpointHandlerMapping controllerEndpointHandlerMapping;
+    //    private final ControllerEndpointHandlerMapping controllerEndpointHandlerMapping;
 
-
-
-    public JWTService(String secretKey) {
-        this.secretKey = secretKey;
-    }
 
     public String generateAccessToken(String username, Roles role) {
+        long accessTokenExpirationTime = 3600000L;
         return generateToken(username, role, accessTokenExpirationTime);
     }
 

@@ -25,6 +25,16 @@ public class SkinversityApplication {
 		System.setProperty("CLIENT_ID", dotenv.get("CLIENT_ID"));
 		System.setProperty("CLIENT_SECRET", dotenv.get("CLIENT_SECRET"));
 
+		System.setProperty("JWT_SECRET", dotenv.get("JWT_SECRET"));
+		System.setProperty("JWT_ACCESS_EXPIRATION", dotenv.get("JWT_ACCESS_EXPIRATION"));
+
+		System.setProperty("MAIL_HOST", dotenv.get("MAIL_HOST"));
+		System.setProperty("MAIL_PORT", dotenv.get("MAIL_PORT"));
+		System.setProperty("MAIL_USERNAME", dotenv.get("MAIL_USERNAME"));
+		System.setProperty("MAIL_PASSWORD", dotenv.get("MAIL_PASSWORD"));
+		System.setProperty("MAIL_SMTP_AUTH", dotenv.get("MAIL_SMTP_AUTH"));
+		System.setProperty("MAIL_SMTP_STARTTLS_ENABLE", dotenv.get("MAIL_SMTP_STARTTLS_ENABLE"));
+
 
 
 		SpringApplication.run(SkinversityApplication.class, args);

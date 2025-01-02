@@ -2,6 +2,7 @@ package com.skinversity.backend.Services;
 
 import com.skinversity.backend.Enumerators.Roles;
 import com.skinversity.backend.Models.Users;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,11 @@ import java.util.List;
 
 public class UserPrincipal implements UserDetails {
     private final Users user;
+
+    public Users getUser() {
+        return user;
+    }
+
     private Collection<? extends GrantedAuthority> authorities;
 
     public UserPrincipal(Users user, Collection<? extends GrantedAuthority> authorities) {
