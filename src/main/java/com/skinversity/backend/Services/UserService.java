@@ -17,22 +17,21 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
 public class UserService implements UserServiceInterface {
     private final UserRepository userRepository;
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
+    @Autowired
     public UserService(UserRepository userRepository, AuthenticationManager authenticationManager, JWTService jwtService, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
@@ -55,7 +54,7 @@ public class UserService implements UserServiceInterface {
         newUser.setPhone(registrationRequest.getPhone());
         newUser.setRole(Roles.CUSTOMER);
         newUser.setCreatedAt(LocalDateTime.now());
-        userRepository.save(newUser);.
+        userRepository.save(newUser);
 
         //send email to newly registered customer to confirm registration
         sendEmail(registrationRequest, emailService);
