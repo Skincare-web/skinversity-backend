@@ -55,7 +55,7 @@ public class UserService implements UserServiceInterface {
         newUser.setPhone(registrationRequest.getPhone());
         newUser.setRole(Roles.CUSTOMER);
         newUser.setCreatedAt(LocalDateTime.now());
-        userRepository.save(newUser);
+        userRepository.save(newUser);.
 
         //send email to newly registered customer to confirm registration
         sendEmail(registrationRequest, emailService);

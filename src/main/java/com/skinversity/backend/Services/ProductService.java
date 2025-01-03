@@ -5,14 +5,26 @@ import com.skinversity.backend.Enumerators.Category;
 import com.skinversity.backend.Exceptions.ProductNotFound;
 import com.skinversity.backend.Models.Product;
 import com.skinversity.backend.Repositories.ProductRepository;
+import com.skinversity.backend.Requests.AddProductRequest;
 import com.skinversity.backend.ServiceInterfaces.ProductServiceInterface;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class ProductService implements ProductServiceInterface {
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final CloudinaryService cloudinaryService;
+
+    public ProductService(ProductRepository productRepository, CloudinaryService cloudinaryService) {
+        this.productRepository = productRepository;
+        this.cloudinaryService = cloudinaryService;
+    }
+
 
     @Override
     public List<ProductDTO> getAllProducts() {
@@ -33,9 +45,10 @@ public class ProductService implements ProductServiceInterface {
     }
 
     @Override
-    public ProductDTO addProduct(ProductDTO product) {
-        return
+    public Product addProduct(AddProductRequest request, MultipartFile image) throws IOException {
+        return getProduct(request, image, cloudinaryService, productRepository);
     }
+
 
     @Override
     public void updateProduct(ProductDTO product) {
@@ -59,5 +72,21 @@ public class ProductService implements ProductServiceInterface {
                 .stream()
                 .map(ProductDTO::mapToDTO)
                 .toList();
+    }
+
+    private static Product getProduct(AddProductRequest request,
+                                      MultipartFile image,
+                                      CloudinaryService cloudinaryService,
+                                      ProductRepository productRepository) throws IOException {
+        String imageURL = cloudinaryService.uploadFile(image);
+        Product product = new Product();
+        product.setProductName(request.getProductName());
+        product.setProductDescription(request.getProductDescription());
+        product.setProductPrice(request.getProductPrice());
+        product.setProductSKU(request.getProductSKU());
+        product.setCategory(request.getCategory());
+        product.setProductImageURL(imageURL);
+        productRepository.save(product);
+        return product;
     }
 }

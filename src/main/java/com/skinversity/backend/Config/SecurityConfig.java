@@ -41,7 +41,9 @@ public class SecurityConfig {
                         .requestMatchers("/user/login", "/user/register")
                         .permitAll()
                         .requestMatchers("/user/change-password")
-                        .hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN"))
+                        .hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
+                        .requestMatchers("/product/addProduct")
+                        .hasAuthority("ROLE_ADMIN"))
 //                .oauth2Login(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session ->
