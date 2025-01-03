@@ -39,7 +39,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/user/login", "/user/register")
-                        .permitAll())
+                        .permitAll()
+                        .requestMatchers("/user/change-password")
+                        .hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN"))
 //                .oauth2Login(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session ->

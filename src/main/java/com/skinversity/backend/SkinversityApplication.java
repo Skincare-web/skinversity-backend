@@ -35,6 +35,9 @@ public class SkinversityApplication {
 		System.setProperty("MAIL_SMTP_AUTH", dotenv.get("MAIL_SMTP_AUTH"));
 		System.setProperty("MAIL_SMTP_STARTTLS_ENABLE", dotenv.get("MAIL_SMTP_STARTTLS_ENABLE"));
 
+		System.setProperty("CLOUDINARY_CLOUD_NAME", dotenv.get("CLOUDINARY_CLOUD_NAME"));
+		System.setProperty("CLOUDINARY_CLOUD_SECRET", dotenv.get("CLOUDINARY_CLOUD_SECRET"));
+		System.setProperty("CLOUDINARY_CLOUD_KEY", dotenv.get("CLOUDINARY_CLOUD_KEY"));
 
 
 		SpringApplication.run(SkinversityApplication.class, args);

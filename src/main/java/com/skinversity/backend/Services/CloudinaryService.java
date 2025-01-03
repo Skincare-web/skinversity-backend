@@ -12,16 +12,12 @@ import java.util.Map;
 @Service
 public class CloudinaryService {
     private final Cloudinary cloudinary;
-    @Value("${cloudinary.cloud_name}")
-    String cloudName;
 
-    @Value("${cloudinary.api_key}")
-    String apiKey;
+    public CloudinaryService(
+            @Value("${CLOUDINARY_CLOUD_NAME}") String cloudName,
+            @Value("${CLOUDINARY_CLOUD_KEY}") String apiKey,
+            @Value("${CLOUDINARY_CLOUD_SECRET}") String apiSecret) {
 
-    @Value("${cloudinary.api_secret}")
-    String apiSecret;
-
-    public CloudinaryService() {
         this.cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", cloudName,
                 "api_key", apiKey,
@@ -35,7 +31,6 @@ public class CloudinaryService {
             return (String) uploadResult.get("url");
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println(cloudName + "\n" + apiKey + "\n" + apiSecret);
         }
         return null;
     }

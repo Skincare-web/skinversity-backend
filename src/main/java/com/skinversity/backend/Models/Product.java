@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
-@Getter
-@Setter
 @NoArgsConstructor
 @Entity
 public class Product {
@@ -48,4 +46,100 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<Reviews> reviews;
+
+    public UUID getProductId() {
+        return productId;
+    }
+
+    public void setProductId(UUID productId) {
+        this.productId = productId;
+    }
+
+    public String getProductSKU() {
+        return productSKU;
+    }
+
+    public void setProductSKU(String productSKU) {
+        this.productSKU = productSKU;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public BigDecimal getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(BigDecimal productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public String getProductDescription() {
+        return productDescription;
+    }
+
+    public void setProductDescription(String productDescription) {
+        this.productDescription = productDescription;
+    }
+
+    public Integer getProductQuantity() {
+        return productQuantity;
+    }
+
+    public void setProductQuantity(Integer productQuantity) {
+        this.productQuantity = productQuantity;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public String getProductImageURL() {
+        return productImageURL;
+    }
+
+    public void setProductImageURL(String productImageURL) {
+        this.productImageURL = productImageURL;
+    }
+
+    public LocalDateTime getProductCreationDate() {
+        return productCreationDate;
+    }
+
+    public void setProductCreationDate(LocalDateTime productCreationDate) {
+        this.productCreationDate = productCreationDate;
+    }
+
+    public LocalDateTime getProductUpdateDate() {
+        return productUpdateDate;
+    }
+
+    public void setProductUpdateDate(LocalDateTime productUpdateDate) {
+        this.productUpdateDate = productUpdateDate;
+    }
+
+    public List<Cart> getCart() {
+        return cart;
+    }
+
+    public void setCart(List<Cart> cart) {
+        this.cart = cart;
+    }
+
+    public List<Reviews> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Reviews> reviews) {
+        this.reviews = reviews;
+    }
 }
