@@ -4,6 +4,7 @@ import com.skinversity.backend.Exceptions.UserAlreadyExists;
 import com.skinversity.backend.Models.Users;
 import com.skinversity.backend.Repositories.UserRepository;
 import com.skinversity.backend.Requests.EmailRequest;
+import com.skinversity.backend.Requests.RegistrationRequest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,29 +29,29 @@ public class AdminService {
         this.emailService = emailService;
     }
 
-    public void enrollAdmin(String email) {
-        Optional<Users> user = userRepository.findByEmail(email);
+    public void enrollAdmin(RegistrationRequest request) {
+        Optional<Users> user = userRepository.findByEmail(request.getEmail());
         if (user.isPresent()) {
             throw new UserAlreadyExists("This email is linked to another user");
         }
-        String tempPassword = RandomStringUtils.random(8);
 
-        Users mewAdmin = new Users();
-        mewAdmin.setEmail(email);
-        mewAdmin.setPassword(passwordEncoder.encode(tempPassword));
-        mewAdmin.setRole(ADMIN);
-        mewAdmin.setCreatedAt(LocalDateTime.now());
-        userRepository.save(mewAdmin);
+        Users newAdmin = new Users();
+        newAdmin.setEmail(request.getEmail());
+        newAdmin.setFullName(request.getName());
+        newAdmin.setPassword(passwordEncoder.encode(""));
+        newAdmin.setRole(ADMIN);
+        newAdmin.setCreatedAt(LocalDateTime.now());
+        userRepository.save(newAdmin);
 
         String message = "Your have successfully been enrolled as an administrator. " +
-                "\nPlease sign in with your email and this generated password: <b>" + tempPassword + "</b>";
+                "\nPlease sign in with your email and this generated password: tribalChief";
         String subject = "SkinVersity Administrator Credentials";
-        String recipient = mewAdmin.getEmail();
-        EmailRequest request = new EmailRequest();
-        request.setSubject(subject);
-        request.setRecipient(recipient);
-        request.setBodyText(message);
-        emailService.sendEmail(request);
+        String recipient = newAdmin.getEmail();
+        EmailRequest emailRequest = new EmailRequest();
+        emailRequest.setSubject(subject);
+        emailRequest.setRecipient(recipient);
+        emailRequest.setBodyText(message);
+        emailService.sendEmail(emailRequest);
 
 
     }

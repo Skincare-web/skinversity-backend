@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -86,7 +87,21 @@ public class ProductService implements ProductServiceInterface {
         product.setProductSKU(request.getProductSKU());
         product.setCategory(request.getCategory());
         product.setProductImageURL(imageURL);
+        product.setProductCreationDate(LocalDateTime.now().withNano(0).withSecond(0));
+        product.setProductQuantity(request.getProductQuantity() == 0 ? 1 : request.getProductQuantity());
+        product.setCategory(request.getCategory());
         productRepository.save(product);
         return product;
     }
+
+/*    public Product addProductNoPicture(AddProductRequest request) {
+        Product product = new Product();
+        product.setProductName(request.getProductName());
+        product.setProductDescription(request.getProductDescription());
+        product.setProductPrice(request.getProductPrice());
+        product.setProductSKU(request.getProductSKU());
+        product.setCategory(request.getCategory());
+        productRepository.save(product);
+        return product;
+    }*/
 }

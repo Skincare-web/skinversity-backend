@@ -51,6 +51,7 @@ public class UserService implements UserServiceInterface {
         String encodedPassword = passwordEncoder.encode(registrationRequest.getPassword());
         newUser.setPassword(encodedPassword);
         newUser.setAddress(registrationRequest.getAddress());
+        newUser.setFullName(registrationRequest.getName());
         newUser.setPhone(registrationRequest.getPhone());
         newUser.setRole(Roles.CUSTOMER);
         newUser.setCreatedAt(LocalDateTime.now());
@@ -88,10 +89,13 @@ public class UserService implements UserServiceInterface {
             cookie.setSecure(true);
             httpServletResponse.addCookie(cookie);
 
-//        }catch(BadCredentialsException e){
-//            throw new BadCredentialsException("Invalid username or password");
+            System.out.println("Role: " + user.getRole());
+
+        }catch(BadCredentialsException e){
+            throw new BadCredentialsException("Invalid username or password");
+
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            System.out.println("message: " + e.getMessage());
         }
     }
 

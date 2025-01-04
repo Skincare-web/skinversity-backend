@@ -21,6 +21,8 @@ public class Users {
 
     private String email;
 
+    private String fullName;
+
     private String password;
 
     private String address;
@@ -39,6 +41,14 @@ public class Users {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Reviews> reviews;
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
     public UUID getUserId() {
         return userId;

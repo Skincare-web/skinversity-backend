@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -38,12 +39,12 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/login", "/user/register")
+                        .requestMatchers("/user/login", "/user/register", "/admin/login", "/admin/enroll-admin","/user/change-password")
                         .permitAll()
-                        .requestMatchers("/user/change-password")
-                        .hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-                        .requestMatchers("/product/addProduct")
-                        .hasAuthority("ROLE_ADMIN"))
+                        .requestMatchers("/product/addProduct", "/product/remove-product/*","/product/getCategory/*")
+                        .hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/product/allProducts")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER"))
 //                .oauth2Login(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session ->
@@ -70,18 +71,18 @@ public class SecurityConfig {
         return authProvider;
     }
 
-/*    @Bean
+    @Bean
     public BearerTokenResolver cookieBearerTokenResolver() {
         return request -> {
             Cookie [] cookies = request.getCookies();
             if(cookies != null) {
                 return Arrays.stream(cookies)
-                        .filter(cookie -> cookie.getName().equals("JSESSIONID"))
+                        .filter(cookie -> cookie.getName().equals("accessToken"))
                         .findFirst()
                         .map(Cookie::getValue)
                         .orElse(null);
             }
             return null;
         };
-    }*/
+    }
 }

@@ -30,7 +30,7 @@ public class Product {
 
     private String productDescription;
 
-    private Integer productQuantity;
+    private int productQuantity;
 
     @Enumerated(EnumType.STRING)
     private Category category;

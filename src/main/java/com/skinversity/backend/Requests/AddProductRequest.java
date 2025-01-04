@@ -7,9 +7,18 @@ import java.math.BigDecimal;
 public class AddProductRequest {
     private String productName;
     private String productDescription;
+    private int productQuantity;
     private BigDecimal productPrice;
     private String productSKU;
     private Category category;
+
+    public Integer getProductQuantity() {
+        return productQuantity;
+    }
+
+    public void setProductQuantity(int productQuantity) {
+        this.productQuantity = productQuantity;
+    }
 
     public String getProductName() {
         return productName;
