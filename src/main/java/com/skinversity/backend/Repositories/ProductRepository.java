@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Product, UUID> {
+
     @Query("SELECT p from Product p where p.category = :category order by p.productName")
     List<Product> findByCategory(Category category);
 }

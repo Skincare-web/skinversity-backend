@@ -29,6 +29,7 @@ public class SecurityConfig {
     private final JWTFilter jwtFilter;
 
 
+    @Autowired
     public SecurityConfig(CustomUserDetailsService userDetailsService, JWTFilter jwtFilter) {
         this.userDetailsService = userDetailsService;
         this.jwtFilter = jwtFilter;
@@ -41,10 +42,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/user/login", "/user/register", "admin/enroll-admin")
                         .permitAll()
-                        .requestMatchers("/product/addProduct", "/product/remove-product/*","/product/getCategory/*")
+                        .requestMatchers("/product/addProduct", "/product/remove-product/*")
                         .hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/product/allProducts","/user/change-password")
-                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER"))
+                        .requestMatchers("/product/allProducts","/user/change-password","/product/getCategory/*")
+                        .hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER")
+                        .requestMatchers("/cart/*")
+                        .hasAuthority("ROLE_CUSTOMER"))
 //                .oauth2Login(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session ->
