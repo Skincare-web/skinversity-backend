@@ -38,7 +38,7 @@ public class AdminService {
         Users newAdmin = new Users();
         newAdmin.setEmail(request.getEmail());
         newAdmin.setFullName(request.getName());
-        newAdmin.setPassword(passwordEncoder.encode(""));
+        newAdmin.setPassword(passwordEncoder.encode("tribalchief"));
         newAdmin.setRole(ADMIN);
         newAdmin.setCreatedAt(LocalDateTime.now());
         userRepository.save(newAdmin);

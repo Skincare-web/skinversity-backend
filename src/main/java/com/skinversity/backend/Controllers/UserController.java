@@ -1,19 +1,19 @@
 package com.skinversity.backend.Controllers;
 
 import com.skinversity.backend.Exceptions.UserAlreadyExists;
+import com.skinversity.backend.Exceptions.UserNotFoundException;
 import com.skinversity.backend.Requests.LoginRequest;
 import com.skinversity.backend.Requests.RegistrationRequest;
+import com.skinversity.backend.Requests.ResetPassword;
 import com.skinversity.backend.Services.UserService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -45,6 +45,18 @@ public class UserController {
         }catch(UsernameNotFoundException e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+    }
+    @PutMapping("/change-password")
+    public ResponseEntity<?> resetPassword(ResetPassword resetPassword) {
+        try{
+            userService.resetPassword(resetPassword);
+        }catch(BadCredentialsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+
+        }catch (UserNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>("Your password has been reset successfully.", HttpStatus.OK);
     }
 }
 

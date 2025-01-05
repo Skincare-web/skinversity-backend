@@ -24,11 +24,12 @@ public class Order {
     private UUID orderID;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private Users user;
 
     private BigDecimal totalPrice;
 
+    @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
     private LocalDateTime createdAt;
@@ -36,13 +37,16 @@ public class Order {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
+    private List<Cart> carts;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
     private List<Cart> cartItems;
 
     @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "paymentId")
+    @JoinColumn(name = "payment_id")
     private Payment payment;
 
-    @OneToOne
-    @JoinColumn(name = "shippingId")
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "shipping_id")
     private Shipping shipping;
 }

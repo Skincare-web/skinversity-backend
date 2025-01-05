@@ -10,6 +10,7 @@ import com.skinversity.backend.Requests.LoginRequest;
 import com.skinversity.backend.Requests.RegistrationRequest;
 import com.skinversity.backend.Requests.ResetPassword;
 import com.skinversity.backend.ServiceInterfaces.UserServiceInterface;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,8 +67,8 @@ public class UserService implements UserServiceInterface {
         EmailRequest emailRequest = new EmailRequest();
         emailRequest.setSubject("Account Creation with Skinversity");
         emailRequest.setRecipient(registrationRequest.getEmail());
-        emailRequest.setBodyText("Hello <b>"
-        + registrationRequest.getName() +"</b>" + " your account with Skinversity has been successfully registered.");
+        emailRequest.setBodyText("Hello " + registrationRequest.getName() +
+                ", your account with Skinversity has been successfully registered.");
         emailService.sendEmail(emailRequest);
     }
 

@@ -26,7 +26,7 @@ public class Shipping {
 
     private String carrier;
 
-    private Integer quantity;
+    private int quantity;
 
     private BigDecimal price;
 

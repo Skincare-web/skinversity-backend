@@ -87,11 +87,11 @@ public class Product {
         this.productDescription = productDescription;
     }
 
-    public Integer getProductQuantity() {
+    public int getProductQuantity() {
         return productQuantity;
     }
 
-    public void setProductQuantity(Integer productQuantity) {
+    public void setProductQuantity(int productQuantity) {
         this.productQuantity = productQuantity;
     }
 

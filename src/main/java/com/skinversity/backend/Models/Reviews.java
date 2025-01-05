@@ -27,7 +27,7 @@ public class Reviews {
     @JoinColumn(name = "productId")
     private Product product;
 
-    private Integer rating;
+    private int rating;
 
     private String comment;
 

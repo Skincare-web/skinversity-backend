@@ -36,11 +36,22 @@ public class Users {
 
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Cart> cart;
+
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "user")
     private List<Order> orders;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Reviews> reviews;
+
+    public List<Cart> getCart() {
+        return cart;
+    }
+
+    public void setCart(List<Cart> cart) {
+        this.cart = cart;
+    }
 
     public String getFullName() {
         return fullName;

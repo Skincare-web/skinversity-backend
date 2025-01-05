@@ -12,7 +12,7 @@ public class AddProductRequest {
     private String productSKU;
     private Category category;
 
-    public Integer getProductQuantity() {
+    public int getProductQuantity() {
         return productQuantity;
     }
 

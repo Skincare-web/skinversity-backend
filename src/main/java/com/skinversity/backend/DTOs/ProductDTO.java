@@ -13,13 +13,13 @@ public class ProductDTO {
     private String productDescription;
     private BigDecimal productPrice;
     private String productImageURL;
-    private Integer productQuantity;
+    private int productQuantity;
 
-    public Integer getProductQuantity() {
+    public int getProductQuantity() {
         return productQuantity;
     }
 
-    public void setProductQuantity(Integer productQuantity) {
+    public void setProductQuantity(int productQuantity) {
         this.productQuantity = productQuantity;
     }
 
