@@ -23,7 +23,7 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID paymentID;
 
-    @OneToOne(mappedBy = "payment", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "payment", cascade = CascadeType.ALL)
     private Order order;
 
     private BigDecimal amount;

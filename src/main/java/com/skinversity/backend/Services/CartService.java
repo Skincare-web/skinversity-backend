@@ -1,17 +1,22 @@
 package com.skinversity.backend.Services;
 
+import com.skinversity.backend.Exceptions.ProductNotFound;
+import com.skinversity.backend.Exceptions.UserNotFoundException;
 import com.skinversity.backend.Models.Cart;
+import com.skinversity.backend.Models.CartItem;
 import com.skinversity.backend.Models.Product;
 import com.skinversity.backend.Models.Users;
 import com.skinversity.backend.Repositories.CartRepository;
 import com.skinversity.backend.Repositories.ProductRepository;
 import com.skinversity.backend.Repositories.UserRepository;
-import com.skinversity.backend.Requests.AddToCartRequest;
+import com.skinversity.backend.Requests.AddOrRemoveFromCartRequest;
 import com.skinversity.backend.ServiceInterfaces.CartServiceInterface;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,60 +27,94 @@ public class CartService implements CartServiceInterface {
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
 
-    public CartService(UserRepository userRepository, ProductRepository productRepository, CartRepository cartRepository) {
+    public CartService(UserRepository userRepository,
+                       ProductRepository productRepository,
+                       CartRepository cartRepository) {
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.cartRepository = cartRepository;
     }
 
     @Override
-    public Cart addItemToCart(AddToCartRequest request) {
-
-        Optional<Users> user = userRepository.findById(request.getUserId());
-        Optional<Product> product = productRepository.findById(request.getProductID());
-        int quantity = request.getQuantity();
-
-        if (user.isEmpty() || product.isEmpty()) {
-            throw new IllegalArgumentException("Item not found");
+    @Transactional
+    public Cart addItemToCart(AddOrRemoveFromCartRequest request) {
+        Users user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new UserNotFoundException("User Not Found"));
+        Cart cart = user.getCart();
+        if (cart == null) {
+            cart = new Cart();
+            cart.setUser(user);
+            cart.setCartItems(new ArrayList<>());
+            cart.setCreatedAt(LocalDateTime.now().withSecond(0).withNano(0));
+            user.setCart(cart);
         }
-        Users users = user.get();
-        Product products = product.get();
 
-        BigDecimal price = products.getProductPrice().multiply(BigDecimal.valueOf(quantity));
+        Product product = productRepository.findById(request.getProductID())
+                .orElseThrow(() -> new ProductNotFound("Product Not Found"));
 
-        //create the cart
-        Cart cart = new Cart();
-        cart.setUser(users);
-        cart.setProduct(products);
-        cart.setQuantity(quantity == 0 ? 1 : quantity);
-        cart.setCreatedAt(LocalDateTime.now().withSecond(0).withNano(0));
-        cart.setPrice(price);
-        return cartRepository.save(cart);
-    }
 
-    @Override
-    public void removeItemFromCart(UUID productId, UUID userId) {
-        Users user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not Found"));
-        Cart cartItem = cartRepository.findByUser_UserIdAndProduct_ProductId(userId, productId)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        Optional<CartItem> existingItems = cart.getCartItems()
+                .stream()
+                .filter(item -> item.getProduct()
+                        .getProductId()
+                        .equals(request.getProductID())).findFirst();
 
-        if (cartItem.getQuantity() > 1){
-            cartItem.setQuantity(cartItem.getQuantity() - 1);
-            cartRepository.save(cartItem);
+        if (existingItems.isPresent()) {
+            BigDecimal ogPrice = product.getProductPrice();
+            CartItem item = existingItems.get();
+            item.setQuantity(item.getQuantity() + request.getQuantity());
+            item.setPrice(ogPrice.multiply(new BigDecimal(item.getQuantity())));
         }else{
-            cartRepository.delete(cartItem);
+            CartItem item = new CartItem();
+            item.setQuantity(request.getQuantity());
+            item.setProduct(product);
+            item.setPrice(product.getProductPrice().multiply(new BigDecimal(request.getQuantity())));
+            item.setCart(cart);
+            cart.getCartItems().add(item);
         }
-
+        cartRepository.save(cart);
+        userRepository.save(user);
+        return cart;
     }
 
     @Override
-    public void clearCart(UUID cartId) {
+    public void removeItemFromCart(AddOrRemoveFromCartRequest request) {
+        Users users = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new UserNotFoundException("User Not Found"));
+        Cart cart = users.getCart();
 
+        Optional<CartItem> items = cart.getCartItems()
+                .stream()
+                .filter(cartItem -> cartItem.getProduct()
+                        .getProductId()
+                        .equals(request.getProductID())).findFirst();
+        if (items.isPresent()) {
+            CartItem item = items.get();
+            if (item.getQuantity() > request.getQuantity()){
+                item.setQuantity(item.getQuantity() - request.getQuantity());
+            }else{
+                cart.getCartItems()
+                        .remove(item);
+            }
+        }
+        cartRepository.save(cart);
     }
 
     @Override
-    public List<Product> getCartItems(UUID cartId) {
-        return List.of();
+    public void clearCart(UUID userId) {
+        Users users = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User Not Found"));
+        Cart cart = users.getCart();
+        cart.getCartItems().clear();
+    }
+
+    @Override
+    public List<CartItem> getCartItems(UUID userId) {
+        Users users = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User Not Found"));
+        Cart cart = users.getCart();
+        return cart.getCartItems()
+                .stream()
+                .toList();
     }
 }

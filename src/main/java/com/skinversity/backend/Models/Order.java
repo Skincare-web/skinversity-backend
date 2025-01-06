@@ -36,17 +36,14 @@ public class Order {
 
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
-    private List<Cart> carts;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
-    private List<Cart> cartItems;
-
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "payment_id")
     private Payment payment;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "shipping_id")
     private Shipping shipping;
 }

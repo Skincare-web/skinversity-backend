@@ -46,6 +46,11 @@ public class JWTFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
+        String uri = request.getRequestURI();
+        if (uri.equals("/admin/enroll-admin") || uri.equals("/user/register")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String username = jwtService.extractUsername(token);
 

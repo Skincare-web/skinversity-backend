@@ -2,15 +2,14 @@ package com.skinversity.backend.Models;
 
 import com.skinversity.backend.Enumerators.Category;
 import jakarta.persistence.*;
-import jakarta.websocket.OnError;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.hibernate.proxy.HibernateProxy;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -41,10 +40,10 @@ public class Product {
 
     private LocalDateTime productUpdateDate;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
-    private List<Cart> cart;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<CartItem> cartItem;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Reviews> reviews;
 
     public UUID getProductId() {
@@ -127,12 +126,12 @@ public class Product {
         this.productUpdateDate = productUpdateDate;
     }
 
-    public List<Cart> getCart() {
-        return cart;
+    public List<CartItem> getCart() {
+        return cartItem;
     }
 
-    public void setCart(List<Cart> cart) {
-        this.cart = cart;
+    public void setCart(List<CartItem> cartItem) {
+        this.cartItem = cartItem;
     }
 
     public List<Reviews> getReviews() {
@@ -141,5 +140,21 @@ public class Product {
 
     public void setReviews(List<Reviews> reviews) {
         this.reviews = reviews;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        Product product = (Product) o;
+        return getProductId() != null && Objects.equals(getProductId(), product.getProductId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 }

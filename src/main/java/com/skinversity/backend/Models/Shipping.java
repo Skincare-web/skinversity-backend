@@ -21,7 +21,7 @@ public class Shipping {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID shippingId;
 
-    @OneToOne(mappedBy = "shipping", cascade = CascadeType.REMOVE)
+    @OneToOne(mappedBy = "shipping", cascade = CascadeType.ALL)
     private Order order;
 
     private String carrier;

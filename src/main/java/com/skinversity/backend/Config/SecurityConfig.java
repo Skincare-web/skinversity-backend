@@ -40,7 +40,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/login", "/user/register", "admin/enroll-admin")
+                        .requestMatchers("/user/login", "/user/register", "/admin/enroll-admin")
                         .permitAll()
                         .requestMatchers("/product/addProduct", "/product/remove-product/*")
                         .hasAuthority("ROLE_ADMIN")

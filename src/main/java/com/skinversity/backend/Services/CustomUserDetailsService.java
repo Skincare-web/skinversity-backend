@@ -34,6 +34,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
         throw new UsernameNotFoundException("User not found with username: " + username);
     }
+
     private Collection<? extends GrantedAuthority> getAuthorities(Users user) {
         String role = "ROLE_" + user.getRole();
         return List.of(new SimpleGrantedAuthority(role));

@@ -2,7 +2,7 @@ package com.skinversity.backend.Requests;
 
 import java.util.UUID;
 
-public class AddToCartRequest {
+public class AddOrRemoveFromCartRequest {
     private UUID userId;
     private UUID productID;
     private int quantity;
