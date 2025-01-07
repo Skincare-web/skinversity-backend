@@ -46,7 +46,7 @@ public class SecurityConfig {
                         .hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/product/allProducts","/user/change-password","/product/getCategory/*")
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER")
-                        .requestMatchers("/cart/*")
+                        .requestMatchers("/cart/*", "/order/checkout")
                         .hasAuthority("ROLE_CUSTOMER"))
 //                .oauth2Login(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())

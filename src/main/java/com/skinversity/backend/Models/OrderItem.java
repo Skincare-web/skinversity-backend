@@ -24,6 +24,16 @@ public class OrderItem {
 
     private BigDecimal price;
 
+    private BigDecimal total;
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
     public UUID getOrderItemId() {
         return orderItemId;
     }
