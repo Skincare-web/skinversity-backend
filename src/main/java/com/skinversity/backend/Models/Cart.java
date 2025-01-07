@@ -23,7 +23,7 @@ public class Cart {
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> cartItems;
 
     public List<CartItem> getCartItems() {
@@ -33,8 +33,6 @@ public class Cart {
     public void setCartItems(List<CartItem> cartItems) {
         this.cartItems = cartItems;
     }
-
-    private BigDecimal price;
 
     private LocalDateTime createdAt;
 
@@ -55,14 +53,6 @@ public class Cart {
 
     public void setUser(Users user) {
         this.user = user;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
     }
 
     public LocalDateTime getCreatedAt() {
