@@ -1,5 +1,6 @@
 package com.skinversity.backend.ServiceInterfaces;
 
+import com.skinversity.backend.Enumerators.OrderStatus;
 import com.skinversity.backend.Models.Order;
 
 import java.util.Optional;
@@ -10,6 +11,6 @@ public interface OrderServiceInterface {
 
     Optional<Order> getOrderById(UUID id);
 
-    void updateOrderStatus(Order order);
+    void updateOrderStatus(UUID orderId, OrderStatus orderStatus);
 
 }

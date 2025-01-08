@@ -1,5 +1,6 @@
 package com.skinversity.backend.Services;
 
+import com.skinversity.backend.Enumerators.OrderStatus;
 import com.skinversity.backend.Exceptions.EmptyCart;
 import com.skinversity.backend.Exceptions.UserNotFoundException;
 import com.skinversity.backend.Models.*;
@@ -8,7 +9,6 @@ import com.skinversity.backend.Repositories.OrderRepository;
 import com.skinversity.backend.Repositories.UserRepository;
 import com.skinversity.backend.Requests.EmailRequest;
 import com.skinversity.backend.ServiceInterfaces.OrderServiceInterface;
-import org.apache.logging.log4j.message.StringFormattedMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -82,11 +82,15 @@ public class OrderService implements OrderServiceInterface {
 
     @Override
     public Optional<Order> getOrderById(UUID id) {
-        return null;
+        return orderRepository.findById(id);
     }
 
     @Override
-    public void updateOrderStatus(Order order) {
-
+    public void updateOrderStatus(UUID orderId, OrderStatus status) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        if (order != null){
+            order.setStatus(status);
+        }
     }
 }
