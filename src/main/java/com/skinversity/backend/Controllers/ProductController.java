@@ -1,11 +1,11 @@
 package com.skinversity.backend.Controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.skinversity.backend.DTOs.ProductDTO;
 import com.skinversity.backend.Enumerators.Category;
 import com.skinversity.backend.Exceptions.ProductNotFound;
 import com.skinversity.backend.Requests.AddProductRequest;
-import com.skinversity.backend.Services.CloudinaryService;
 import com.skinversity.backend.Services.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +20,9 @@ import java.util.UUID;
 @RequestMapping("/product")
 public class ProductController {
     private final ProductService productService;
-    private final CloudinaryService cloudinaryService;
 
-    public ProductController(ProductService productService, CloudinaryService cloudinaryService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.cloudinaryService = cloudinaryService;
     }
 
     @PostMapping("/addProduct")
@@ -75,4 +73,20 @@ public class ProductController {
         productService.addProductNoPicture(request);
         return new ResponseEntity<>("Product added successfully", HttpStatus.OK);
     }*/
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateProduct(
+            @RequestParam("product")String updateDetails,
+            @RequestParam("newImage")MultipartFile newImage
+    )  {
+        try{
+            ProductDTO productDTO = new ObjectMapper().readValue(updateDetails, ProductDTO.class);
+            productService.updateProduct(productDTO, newImage);
+        }catch (JsonProcessingException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IOException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>("Product updated successfully", HttpStatus.OK);
+    }
 }

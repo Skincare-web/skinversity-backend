@@ -106,6 +106,7 @@ public class CartService implements CartServiceInterface {
                 .orElseThrow(() -> new UserNotFoundException("User Not Found"));
         Cart cart = users.getCart();
         cart.getCartItems().clear();
+        cartRepository.save(cart);
     }
 
     @Override

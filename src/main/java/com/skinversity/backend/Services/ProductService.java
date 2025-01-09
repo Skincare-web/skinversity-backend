@@ -52,7 +52,18 @@ public class ProductService implements ProductServiceInterface {
 
 
     @Override
-    public void updateProduct(ProductDTO product) {
+    public void updateProduct(ProductDTO product, MultipartFile image) throws IOException {
+        Product prodToUpdate = productRepository.findById(product.getProductId())
+                .orElseThrow(() -> new ProductNotFound("Product not found"));
+        if(prodToUpdate != null) {
+            String newImageURL = cloudinaryService.uploadFile(image);
+            prodToUpdate.setProductName(product.getProductName());
+            prodToUpdate.setProductDescription(product.getProductDescription());
+            prodToUpdate.setProductPrice(product.getProductPrice());
+            prodToUpdate.setProductPrice(product.getProductPrice());
+            prodToUpdate.setProductImageURL(newImageURL);
+            productRepository.save(prodToUpdate);
+        }
 
     }
 

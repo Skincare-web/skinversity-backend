@@ -15,7 +15,7 @@ public interface ProductServiceInterface {
     List<ProductDTO> getAllProducts();
     Optional<ProductDTO> getProductById(UUID productId);
     Product addProduct(AddProductRequest request, MultipartFile image) throws IOException;
-    void updateProduct(ProductDTO product);
+    void updateProduct(ProductDTO product, MultipartFile image) throws IOException;
     void deleteProduct(UUID productId);
     List<ProductDTO> getProductsByCategory(Category category);
 }
