@@ -74,7 +74,7 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    @Bean
+   /* @Bean
     public BearerTokenResolver cookieBearerTokenResolver() {
         return request -> {
             Cookie [] cookies = request.getCookies();
@@ -87,5 +87,5 @@ public class SecurityConfig {
             }
             return null;
         };
-    }
+    }*/
 }

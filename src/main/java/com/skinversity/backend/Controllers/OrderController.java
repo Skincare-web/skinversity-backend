@@ -1,14 +1,12 @@
 package com.skinversity.backend.Controllers;
 
+import com.skinversity.backend.Enumerators.OrderStatus;
 import com.skinversity.backend.Exceptions.EmptyCart;
 import com.skinversity.backend.Exceptions.UserNotFoundException;
 import com.skinversity.backend.Services.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -29,4 +27,25 @@ public class OrderController {
         }
         return new ResponseEntity<>("Your checkout was successful", HttpStatus.OK);
     }
+
+    @GetMapping("/get-order")
+    public ResponseEntity<?> getOrder(@RequestParam UUID orderId) {
+        try{
+            orderService.getOrderById(orderId);
+        }catch (RuntimeException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/update-status")
+    public ResponseEntity<?> updateStatus(@RequestParam UUID orderId, @RequestParam OrderStatus status) {
+        try{
+            orderService.updateOrderStatus(orderId, status);
+        }catch (RuntimeException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Order status successfully updated to " + status, HttpStatus.OK);
+    }
 }
+
