@@ -40,7 +40,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/login", "/user/register", "/admin/enroll-admin")
+                        .requestMatchers("/user/login", "/user/register", "/admin/enroll-admin", "/v3/api-docs/**", "/swagger-ui/**")
                         .permitAll()
                         .requestMatchers("/product/addProduct", "/product/remove-product/*")
                         .hasAuthority("ROLE_ADMIN")
@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .hasAuthority("ROLE_CUSTOMER"))
 //                .oauth2Login(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
+                .formLogin(Customizer.withDefaults())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
