@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -88,5 +89,14 @@ public class ProductController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>("Product updated successfully", HttpStatus.OK);
+    }
+
+    @PostMapping("/get")
+    public ResponseEntity<?> getProduct(UUID productId) {
+        Optional<ProductDTO> product = productService.getProductById(productId);
+        if (product.isPresent()) {
+            return new ResponseEntity<>(product.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
     }
 }
