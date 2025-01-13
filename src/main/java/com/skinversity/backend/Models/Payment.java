@@ -13,8 +13,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -26,11 +24,60 @@ public class Payment {
     @OneToOne(mappedBy = "payment", cascade = CascadeType.ALL)
     private Order order;
 
-    private BigDecimal amount;
+    private int amount;
 
+    @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
     private LocalDateTime paymentDate;
 
     private PaymentMethod paymentMethod;
+
+    public UUID getPaymentID() {
+        return paymentID;
+    }
+
+    public void setPaymentID(UUID paymentID) {
+        this.paymentID = paymentID;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public PaymentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PaymentStatus status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getPaymentDate() {
+        return paymentDate;
+    }
+
+    public void setPaymentDate(LocalDateTime paymentDate) {
+        this.paymentDate = paymentDate;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
 }

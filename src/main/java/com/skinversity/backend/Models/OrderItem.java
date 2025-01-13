@@ -24,13 +24,13 @@ public class OrderItem {
 
     private BigDecimal price;
 
-    private BigDecimal total;
+    private int total;
 
-    public BigDecimal getTotal() {
+    public int getTotal() {
         return total;
     }
 
-    public void setTotal(BigDecimal total) {
+    public void setTotal(int total) {
         this.total = total;
     }
 

@@ -1,6 +1,7 @@
 package com.skinversity.backend.Controllers;
 
 
+import com.skinversity.backend.Exceptions.ProductNotFound;
 import com.skinversity.backend.Exceptions.UserNotFoundException;
 import com.skinversity.backend.Requests.AddOrRemoveFromCartRequest;
 import com.skinversity.backend.Services.CartService;
@@ -24,8 +25,8 @@ public class CartController {
         try{
             cartService.addItemToCart(request);
             return new ResponseEntity<>("Item added successfully",HttpStatus.OK);
-        }catch(IllegalArgumentException e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }catch(UserNotFoundException | ProductNotFound e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }
     }
 

@@ -6,13 +6,16 @@ import com.skinversity.backend.Exceptions.UserNotFoundException;
 import com.skinversity.backend.Models.*;
 import com.skinversity.backend.Repositories.CartRepository;
 import com.skinversity.backend.Repositories.OrderRepository;
+import com.skinversity.backend.Repositories.PaymentRepository;
 import com.skinversity.backend.Repositories.UserRepository;
 import com.skinversity.backend.Requests.EmailRequest;
+import com.skinversity.backend.Requests.PaymentResponse;
 import com.skinversity.backend.ServiceInterfaces.OrderServiceInterface;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.skinversity.backend.Enumerators.OrderStatus.PENDING;
+import static com.skinversity.backend.Enumerators.PaymentMethod.CASH;
 
 @Service
 public class OrderService implements OrderServiceInterface {
@@ -27,17 +31,22 @@ public class OrderService implements OrderServiceInterface {
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final EmailService emailService;
+    private final PaymentService paymentService;
+    private final PaymentRepository paymentRepository;
 
-    public OrderService(UserRepository userRepository, OrderRepository orderRepository, CartRepository cartRepository, EmailService emailService) {
+
+    public OrderService(UserRepository userRepository, OrderRepository orderRepository, CartRepository cartRepository, EmailService emailService, PaymentService paymentService, PaymentRepository paymentRepository) {
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
         this.emailService = emailService;
+        this.paymentService = paymentService;
+        this.paymentRepository = paymentRepository;
     }
 
     @Transactional
     @Override
-    public void checkout(UUID userId) {
+    public PaymentResponse checkout(UUID userId) {
         Users user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         Cart cart = user.getCart();
@@ -57,11 +66,12 @@ public class OrderService implements OrderServiceInterface {
             orderItem.setProduct(cartItem.getProduct());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setPrice(cartItem.getPrice());
-            orderItem.setTotal(cartItem.getPrice());
+            orderItem.setTotal(cartItem.getPrice().intValue());
             checkoutItems.add(orderItem);
         }
         order.setOrderItems(checkoutItems);
-        order.setTotalPrice(checkoutItems.stream()
+        order.setTotalPrice(checkoutItems
+                .stream()
                 .map(OrderItem::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
         orderRepository.save(order);
@@ -78,6 +88,23 @@ public class OrderService implements OrderServiceInterface {
         request.setBodyText("Hello, " + user.getFullName() + "! Your order has been confirmed!");
         emailService.sendEmail(request);
 
+        //todo process payments
+
+        String email = user.getEmail();
+        int totalPrice =  order.getTotalPrice().intValue();
+
+
+        order.getOrderItems().clear();
+        orderRepository.save(order);
+
+        Payment payment = new Payment();
+        payment.setPaymentDate(LocalDateTime.now());
+        payment.setPaymentMethod(CASH);
+        payment.setAmount(totalPrice);
+        payment.setOrder(order);
+        paymentRepository.save(payment);
+
+        return paymentService.processPayment(email, totalPrice);
     }
 
     @Override

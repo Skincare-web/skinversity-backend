@@ -3,7 +3,10 @@ package com.skinversity.backend.Controllers;
 import com.skinversity.backend.Enumerators.OrderStatus;
 import com.skinversity.backend.Exceptions.EmptyCart;
 import com.skinversity.backend.Exceptions.UserNotFoundException;
+import com.skinversity.backend.Models.Users;
+import com.skinversity.backend.Requests.PaymentResponse;
 import com.skinversity.backend.Services.OrderService;
+import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +23,13 @@ public class OrderController {
 
     @PostMapping("/checkout")
     public ResponseEntity<?> checkout(@RequestParam UUID userId) {
+        PaymentResponse response;
         try {
-            orderService.checkout(userId);
+            response = orderService.checkout(userId);
         } catch (UserNotFoundException | EmptyCart e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Your checkout was successful", HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/get-order")
