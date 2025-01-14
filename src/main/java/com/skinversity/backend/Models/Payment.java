@@ -31,6 +31,7 @@ public class Payment {
 
     private LocalDateTime paymentDate;
 
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
     public UUID getPaymentID() {

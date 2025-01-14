@@ -1,8 +1,9 @@
 package com.skinversity.backend.Services;
 
-import com.skinversity.backend.Enumerators.PaymentMethod;
-import com.skinversity.backend.Models.Payment;
+
+import com.skinversity.backend.Models.Order;
 import com.skinversity.backend.Models.Users;
+import com.skinversity.backend.Repositories.OrderRepository;
 import com.skinversity.backend.Repositories.PaymentRepository;
 import com.skinversity.backend.Repositories.UserRepository;
 import com.skinversity.backend.Requests.PaymentRequest;
@@ -16,25 +17,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+
 import java.util.UUID;
 
-import static com.skinversity.backend.Enumerators.PaymentMethod.CASH;
 
 @Service
 public class PaymentService implements PaymentServiceInterface {
     private final RestTemplate restTemplate;
     private final PaymentRepository paymentRepository;
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
 
-    Dotenv dotenv = Dotenv.configure().load();
-    String secretKey = dotenv.get("PAYSTACK_SECRET");
+  Dotenv dotenv = Dotenv.configure().load();
+    private final String secretKey = dotenv.get("PAYSTACK_SECRET");
 
-    public PaymentService(RestTemplate restTemplate, PaymentRepository paymentRepository, UserRepository userRepository) {
+    public PaymentService(RestTemplate restTemplate,
+                          PaymentRepository paymentRepository,
+                          UserRepository userRepository,
+                          OrderRepository orderRepository) {
         this.restTemplate = restTemplate;
         this.paymentRepository = paymentRepository;
         this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -56,7 +60,15 @@ public class PaymentService implements PaymentServiceInterface {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         UUID userId = users.getUserId();
 
+        Order order = orderRepository.findByUser_UserId(userId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
         ResponseEntity<PaymentResponse> response = restTemplate.exchange(url, HttpMethod.POST, request, PaymentResponse.class);
+
+
+        String reference = response.getBody().getData().getReference();
+        order.setReference(reference);
+        orderRepository.save(order);
 
         System.out.println(response.getBody());
 
