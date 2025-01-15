@@ -74,6 +74,8 @@ public class CartService implements CartServiceInterface {
         }
         cartRepository.save(cart);
         userRepository.save(user);
+        product.setProductQuantity(product.getProductQuantity() - request.getQuantity());
+        productRepository.save(product);
         return cart;
     }
 

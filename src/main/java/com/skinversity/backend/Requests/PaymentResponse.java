@@ -42,6 +42,15 @@ public class PaymentResponse {
         private String authorization_url;
         private String access_code;
         private String reference;
+        private int amount;
+
+        public int getAmount() {
+            return amount;
+        }
+
+        public void setAmount(int amount) {
+            this.amount = amount;
+        }
 
         public String getAuthorization_url() {
             return authorization_url;

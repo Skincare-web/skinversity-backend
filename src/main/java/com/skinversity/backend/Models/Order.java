@@ -45,6 +45,16 @@ public class Order {
     @JoinColumn(name = "shipping_id")
     private Shipping shipping;
 
+    private String reference;
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
     public UUID getOrderID() {
         return orderID;
     }

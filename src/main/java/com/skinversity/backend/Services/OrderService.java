@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,8 +93,6 @@ public class OrderService implements OrderServiceInterface {
         int totalPrice =  order.getTotalPrice().intValue();
 
 
-        order.getOrderItems().clear();
-        orderRepository.save(order);
 
         Payment payment = new Payment();
         payment.setPaymentDate(LocalDateTime.now());
@@ -104,6 +101,8 @@ public class OrderService implements OrderServiceInterface {
         payment.setOrder(order);
         paymentRepository.save(payment);
 
+        order.getOrderItems().clear();
+        orderRepository.save(order);
         return paymentService.processPayment(email, totalPrice);
     }
 
