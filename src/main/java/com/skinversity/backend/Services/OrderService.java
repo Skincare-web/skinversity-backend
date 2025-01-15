@@ -34,7 +34,12 @@ public class OrderService implements OrderServiceInterface {
     private final PaymentRepository paymentRepository;
 
 
-    public OrderService(UserRepository userRepository, OrderRepository orderRepository, CartRepository cartRepository, EmailService emailService, PaymentService paymentService, PaymentRepository paymentRepository) {
+    public OrderService(UserRepository userRepository,
+                        OrderRepository orderRepository,
+                        CartRepository cartRepository,
+                        EmailService emailService,
+                        PaymentService paymentService,
+                        PaymentRepository paymentRepository) {
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
         this.cartRepository = cartRepository;
