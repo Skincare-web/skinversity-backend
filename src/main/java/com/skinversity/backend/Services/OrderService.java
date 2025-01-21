@@ -79,7 +79,6 @@ public class OrderService implements OrderServiceInterface {
         cart.getCartItems().clear();
         cartRepository.save(cart);
 
-        //todo email confirmation for placed orders, fix the deletion of cart items.
 
         EmailRequest request = new EmailRequest();
         request.setRecipient(user.getEmail());
@@ -87,7 +86,6 @@ public class OrderService implements OrderServiceInterface {
         request.setBodyText("Hello, " + user.getFullName() + "! Your order has been confirmed!");
         emailService.sendEmail(request);
 
-        //todo process payments
 
         String email = user.getEmail();
         int totalPrice =  order.getTotalPrice().intValue();

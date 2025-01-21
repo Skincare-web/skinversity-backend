@@ -78,6 +78,5 @@ public class PaymentService implements PaymentServiceInterface {
 
     @Override
     public void refundPayment(UUID paymentId) {
-
     }
 }
