@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("api/v1/product")
 public class ProductController {
     private final ProductService productService;
 
@@ -41,13 +41,23 @@ public class ProductController {
         }
     }
     @GetMapping("/allProducts")
-    public List<ProductDTO> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<?> getAllProducts() {
+        try{
+            List<ProductDTO> products = productService.getAllProducts();
+            return ResponseEntity.ok(products);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/getCategory/{category}")
-    public List<ProductDTO> getByCategory(@PathVariable Category category) {
-        return productService.getProductsByCategory(category);
+    public ResponseEntity<?> getByCategory(@PathVariable Category category) {
+        try{
+            List<ProductDTO> products = productService.getProductsByCategory(category);
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("an error ocurred.");
+        }
     }
 
     @DeleteMapping("/remove-product/{productId}")
@@ -91,8 +101,8 @@ public class ProductController {
         return new ResponseEntity<>("Product updated successfully", HttpStatus.OK);
     }
 
-    @PostMapping("/get")
-    public ResponseEntity<?> getProduct(UUID productId) {
+    @PostMapping("/get{productId}")
+    public ResponseEntity<?> getProduct(@PathVariable UUID productId) {
         Optional<ProductDTO> product = productService.getProductById(productId);
         if (product.isPresent()) {
             return new ResponseEntity<>(product.get(), HttpStatus.OK);

@@ -18,7 +18,7 @@ import static com.skinversity.backend.Enumerators.OrderStatus.PAID;
 
 
 @RestController
-@RequestMapping("/paystack")
+@RequestMapping("api/v1/paystack")
 public class PaystackWebhookController {
     private final OrderRepository orderRepository;
 

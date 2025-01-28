@@ -41,15 +41,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(Customizer.withDefaults()) // Enable CORS
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF`
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/login", "/user/register", "/admin/enroll-admin", "/v3/api-docs/**", "/swagger-ui/**", "/paystack/webhook")
+                        .requestMatchers("/api/v1/user/login", "/api/v1/user/register", "/api/v1/admin/enroll-admin", "/v3/api-docs/**", "/swagger-ui/**", "/api/v1/paystack/webhook")
                         .permitAll()
-                        .requestMatchers("/product/addProduct", "/product/remove-product/*")
+                        .requestMatchers("/api/v1/product/addProduct", "/api/v1/product/remove-product/*")
                         .hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/product/allProducts", "/user/change-password", "/product/getCategory/*")
+                        .requestMatchers("/api/v1/product/allProducts", "/apu/v1/user/change-password", "/api/v1/product/getCategory/*")
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER")
-                        .requestMatchers("/cart/*", "/order/checkout")
+                        .requestMatchers("/api/v1/cart/*", "/api/v1/order/checkout")
                         .hasAuthority("ROLE_CUSTOMER"))
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
