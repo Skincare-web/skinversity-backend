@@ -6,7 +6,6 @@ import com.skinversity.backend.Repositories.UserRepository;
 import com.skinversity.backend.Requests.EmailRequest;
 import com.skinversity.backend.Requests.RegistrationRequest;
 import io.github.cdimascio.dotenv.Dotenv;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

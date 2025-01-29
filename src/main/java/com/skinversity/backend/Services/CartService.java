@@ -116,8 +116,11 @@ public class CartService implements CartServiceInterface {
         Users users = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User Not Found"));
         Cart cart = users.getCart();
-        return cart.getCartItems()
+        List<CartItem> items = cart.getCartItems();
+        System.out.println(items);
+        return items
                 .stream()
+                .distinct()
                 .toList();
     }
 }

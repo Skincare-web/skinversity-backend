@@ -28,7 +28,7 @@ public class PaymentService implements PaymentServiceInterface {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
 
-  Dotenv dotenv = Dotenv.configure().load();
+    Dotenv dotenv = Dotenv.configure().load();
     private final String secretKey = dotenv.get("PAYSTACK_SECRET");
 
     public PaymentService(RestTemplate restTemplate,
@@ -68,6 +68,7 @@ public class PaymentService implements PaymentServiceInterface {
 
         String reference = response.getBody().getData().getReference();
         order.setReference(reference);
+
         orderRepository.save(order);
 
         System.out.println(response.getBody());

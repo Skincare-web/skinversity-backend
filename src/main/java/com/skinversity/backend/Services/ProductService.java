@@ -37,11 +37,7 @@ public class ProductService implements ProductServiceInterface {
 
     @Override
     public Optional<ProductDTO> getProductById(UUID productId) {
-        return productRepository.findAll()
-                .stream()
-                .filter(product -> product.getProductId().equals(productId))
-                .map(ProductDTO::mapToDTO)
-                .findAny();
+        return productRepository.findByProductId(productId).map(ProductDTO::mapToDTO);
 
     }
 

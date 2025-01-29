@@ -1,7 +1,6 @@
 package com.skinversity.backend.Config;
 
 import com.skinversity.backend.Services.CustomUserDetailsService;
-import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,14 +15,12 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -47,9 +44,9 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/api/v1/product/addProduct", "/api/v1/product/remove-product/*")
                         .hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/v1/product/allProducts", "/apu/v1/user/change-password", "/api/v1/product/getCategory/*")
+                        .requestMatchers("/api/v1/product/allProducts","/api/v1/product/get/**", "/apu/v1/user/change-password", "/api/v1/product/getCategory/*")
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER")
-                        .requestMatchers("/api/v1/cart/*", "/api/v1/order/checkout")
+                        .requestMatchers("/api/v1/cart/*", "/api/v1/order/checkout", "/api/v1/cart/get-items/*")
                         .hasAuthority("ROLE_CUSTOMER"))
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())

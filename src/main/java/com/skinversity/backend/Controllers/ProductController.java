@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/product")
+@RequestMapping("/api/v1/product")
 public class ProductController {
     private final ProductService productService;
 
@@ -101,8 +101,8 @@ public class ProductController {
         return new ResponseEntity<>("Product updated successfully", HttpStatus.OK);
     }
 
-    @PostMapping("/get{productId}")
-    public ResponseEntity<?> getProduct(@PathVariable UUID productId) {
+    @GetMapping("/get")
+    public ResponseEntity<?> getProduct(@RequestParam UUID productId) {
         Optional<ProductDTO> product = productService.getProductById(productId);
         if (product.isPresent()) {
             return new ResponseEntity<>(product.get(), HttpStatus.OK);

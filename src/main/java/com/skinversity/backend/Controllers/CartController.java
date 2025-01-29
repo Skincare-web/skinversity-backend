@@ -50,13 +50,12 @@ public class CartController {
         return new ResponseEntity<>("Cart cleared successfully",HttpStatus.OK);
     }
 
-    @PostMapping("/get-items")
+    @GetMapping("/get-items")
     public ResponseEntity<?> getCartItems(@RequestParam UUID userID) {
         try {
-            cartService.getCartItems(userID);
+            return ResponseEntity.ok(cartService.getCartItems(userID));
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>("Cart items retrieved successfully",HttpStatus.OK);
     }
 }
