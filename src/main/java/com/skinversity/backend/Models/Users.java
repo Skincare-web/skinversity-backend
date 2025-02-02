@@ -45,7 +45,7 @@ public class Users {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Reviews> reviews;
 
-    public Cart getCart() {
+    public  Cart getCart() {
         return cart;
     }
 
